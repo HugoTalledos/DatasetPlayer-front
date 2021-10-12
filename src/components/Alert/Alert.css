@@ -1,0 +1,9 @@
+.bg-danger {
+  background-color: #e57373!important;
+  color: white!important;
+}
+
+.bg-success {
+  background-color: #81c784!important;
+  color: white!important;
+}
