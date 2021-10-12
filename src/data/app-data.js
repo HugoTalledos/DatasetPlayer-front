@@ -22,7 +22,7 @@ const reducer = (data, action) => {
       clear: action.clear,
       graph: action.graph,
       delTemp: action.delTemp,
-      disabled: action.disabled,
+      players: [],
     };
   }
   return { ...data };
@@ -46,7 +46,7 @@ const AppInformation = ({ children }) => {
     clear: false,
     graph: false,
     delTemp: false,
-    disabled: false,
+    players: [],
   });
   return (
     <AppContext.Provider value={{ data, dispatchData }}>
