@@ -1,0 +1,10 @@
+.main-container__preview-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.main-container__preview-list--button {
+  margin-top: auto;
+  text-align: center;
+}

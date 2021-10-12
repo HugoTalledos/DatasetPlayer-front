@@ -1,0 +1,6 @@
+.main-container__form-info {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
+  width: 95%;
+}
