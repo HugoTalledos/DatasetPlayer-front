@@ -11,13 +11,16 @@ const FormConfig = () => {
     switch(data.metric) {
       case '1':
         setUnity('°');
+        dispatchData({ ...data, unity: '°' })
         break;
-      case '2':
-        setUnity('m/s');
-        break;
-      case '3':
-        setUnity('°/s');
-        break;
+        case '2':
+          setUnity('m/s');
+          dispatchData({ ...data, unity: 'm/s'})
+          break;
+        case '3':
+          setUnity('°/s');
+          dispatchData({ ...data, unity: '°/s'})
+          break;
       default:
         setUnity('');
     }
