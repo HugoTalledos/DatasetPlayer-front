@@ -18,7 +18,7 @@ const Alert = () => {
     // eslint-disable-next-line
   }, [data]);
 
-  return (<ToastContainer className="d-inline-block m-1" position={'bottom-center'}>
+  return (<ToastContainer className="d-inline-block m-1" position={'bottom-start'}>
     <Toast show={data.show} delay={notificationTimeout}
            bg={data.type} animation autohide>
       <Toast.Header closeButton={false}>
