@@ -1,5 +1,9 @@
 import React, { useContext, useMemo, useState } from 'react';
 import { ToastContainer, Toast } from "react-bootstrap";
+import { ReactComponent as WarningSVG } from '../../res/icons/warning.svg';
+import { ReactComponent as AlertSVG } from '../../res/icons/danger.svg';
+import { ReactComponent as SuccesSVG } from '../../res/icons/success.svg';
+import { ReactComponent as DefaultSVG } from '../../res/icons/default.svg';
 import alertMessageContext from '../../context/notification-context';
 import './Alert.css';
 
@@ -18,10 +22,20 @@ const Alert = () => {
     // eslint-disable-next-line
   }, [data]);
 
-  return (<ToastContainer className="d-inline-block m-1" position={'bottom-start'}>
+  const renderIcon = () => {
+    switch (data.type) {
+      case 'warning': return(<WarningSVG className={'iconNotification warning'}/>);
+      case 'danger': return(<AlertSVG className={'iconNotification danger'}/>);
+      case 'success': return(<SuccesSVG className={'iconNotification success'}/>);
+      default: return(<DefaultSVG className={'iconNotification'}/>);
+    }
+  }
+
+  return (<ToastContainer className="d-inline-block m-1" position={'top-start'}>
     <Toast show={data.show} delay={notificationTimeout}
-           bg={data.type} animation autohide>
+           bg={'ligth'} animation autohide>
       <Toast.Header closeButton={false}>
+        {renderIcon('danger')}
         <strong className="me-auto">Notification</strong>
       </Toast.Header>
       <Toast.Body>{data.text}</Toast.Body>

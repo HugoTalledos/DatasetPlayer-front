@@ -1,9 +1,26 @@
-.bg-danger {
-  background-color: #e57373!important;
-  color: white!important;
+.iconNotification {
+  margin: 0 1em;
 }
 
-.bg-success {
-  background-color: #81c784!important;
-  color: white!important;
+.iconNotification.danger {
+  color:#E54B4B;
+}
+.iconNotification.success {
+  color:#02d36e;
+}
+.iconNotification.warning {
+  color: #ffb20f;
+}
+
+.toast-header {
+  color: #212121!important;
+  background-color: rgba(190, 190, 190, 0.75)!important;
+}
+
+.toast {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)!important;
+}
+
+.bg-ligth {
+  background-color: #F4F4F8!important;
 }
