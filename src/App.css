@@ -29,6 +29,10 @@
   box-shadow: 0 0 0 0.25rem rgb(0 230 118 /25%)!important;
 }
 
+.form-check-input:checked {
+  background-color: #00e676!important;
+  border-color: #00e676!important;
+}
 
 ::-webkit-scrollbar {
   width: 7px;     /* Tamaño del scroll en vertical */
