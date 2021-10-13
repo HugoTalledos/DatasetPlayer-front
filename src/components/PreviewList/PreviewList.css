@@ -2,9 +2,22 @@
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  padding: 1.5em;
+  border-radius: 5px;
+  max-height: 85vh;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4);
+}
+
+.main-container__preview-list--list {
+  overflow-y: auto;
+  margin: 1em 0
 }
 
 .main-container__preview-list--button {
   margin-top: auto;
   text-align: center;
+}
+
+.list-group-item:hover {
+  background-color: #F4F4F8;
 }
