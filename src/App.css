@@ -3,3 +3,63 @@
   flex-direction: row;
   margin: 3em;
 }
+
+.btn-success {
+  background-color: #00e676!important;
+  border-color: #00e676!important;
+  color: #212121!important;
+}
+.btn-success:hover {
+  background-color: #02d36e!important;
+  border-color: #02d36e!important;
+  color: #212121!important;
+}
+
+.form-switch .form-chek-input:focus {
+  background-image: none!important;
+}
+
+.form-check-input:focus {
+  border-color: rgba(0,230,118, 0.2)!important;
+  box-shadow: 0 0 0 0.25rem rgb(0 230 118 /25%)!important;
+}
+
+.form-control:focus, .form-select:focus  {
+  border-color: #00e676!important;
+  box-shadow: 0 0 0 0.25rem rgb(0 230 118 /25%)!important;
+}
+
+
+::-webkit-scrollbar {
+  width: 7px;     /* Tamaño del scroll en vertical */
+  height: 7px;   /* Tamaño del scroll en horizontal*/
+} 
+
+/* Ponemos un color de fondo y redondeamos las esquinas del thumb */
+::-webkit-scrollbar-thumb {
+  background: rgb(180, 180, 180);
+  border-radius: 4px;
+}
+
+/* Cambiamos el fondo y agregamos una sombra cuando esté en hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b3b3b3;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Cambiamos el fondo cuando esté en active */
+::-webkit-scrollbar-thumb:active {
+  background-color: #999999;
+}
+
+/* Ponemos un color de fondo y redondeamos las esquinas del track */
+::-webkit-scrollbar-track {
+  background: #e1e1e1;
+  border-radius: 4px;
+}
+
+/* Cambiamos el fondo cuando esté en active o hover */
+::-webkit-scrollbar-track:hover,
+::-webkit-scrollbar-track:active {
+background: #d4d4d4;
+}
