@@ -4,3 +4,18 @@
   margin-bottom: 1em;
   width: 95%;
 }
+
+.main-container__form-config {
+  width: 95%;
+}
+
+.main-container__form-mode {
+  text-align: center;
+  width: 95%;
+}
+
+.main-container__form-mode--switches {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5em;
+}
