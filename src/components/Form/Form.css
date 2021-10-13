@@ -1,41 +1,31 @@
 .main-container__form {
   display: flex;
   flex-direction: column;
-  width: 70%;
+  width: 65%;
   overflow-y: auto;
   max-height: 85vh;
+  padding: 1.5em;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4);
+  border-radius: 5px;
 }
 
-.main-container__form::-webkit-scrollbar {
-  width: 8px;     /* Tamaño del scroll en vertical */
-  height: 8px;   /* Tamaño del scroll en horizontal*/
-} 
-
-/* Ponemos un color de fondo y redondeamos las esquinas del thumb */
-.main-container__form::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 4px;
+.main-container__form-info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
 }
 
-/* Cambiamos el fondo y agregamos una sombra cuando esté en hover */
-.main-container__form::-webkit-scrollbar-thumb:hover {
-  background: #b3b3b3;
-  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+.main-container__form-config {
+  text-align: center;
 }
 
-/* Cambiamos el fondo cuando esté en active */
-.main-container__form::-webkit-scrollbar-thumb:active {
-  background-color: #999999;
+.main-container__form-mode {
+  text-align: center;
 }
 
-/* Ponemos un color de fondo y redondeamos las esquinas del track */
-.main-container__form::-webkit-scrollbar-track {
-  background: #e1e1e1;
-  border-radius: 4px;
-}
-
-/* Cambiamos el fondo cuando esté en active o hover */
-.main-container__form::-webkit-scrollbar-track:hover,
-.main-container__form::-webkit-scrollbar-track:active {
-background: #d4d4d4;
+.main-container__form-mode--switches {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5em;
 }
