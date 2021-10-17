@@ -22,7 +22,7 @@ const AppInformation = ({ children }) => {
       sex: '',
       experience: 0,
       efectivity: 0,
-      root: '',
+      listFiles: [],
       rootFinish: '',
       separator: ',',
       decimalSeparator: '.',
