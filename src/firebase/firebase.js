@@ -1,6 +1,6 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/storage';
-import firebaseConfig from './firebase-config.json';
+import firebaseConfig from '../firebase-config.json';
 
 firebase.initializeApp(firebaseConfig);
 
