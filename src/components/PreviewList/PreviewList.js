@@ -2,6 +2,8 @@ import React, { useContext, useMemo, useState } from 'react';
 import { ListGroup, Button, Modal } from 'react-bootstrap';
 import AppContext from '../../context/app-context';
 import NotificationContext from '../../context/notification-context';
+import BackendPlayer from '../../api/backendApi';
+import { firebaseStorage } from '../../firebase/firebase';
 import './PreviewList.css';
 
 const PreviewList = () => {
@@ -10,6 +12,7 @@ const PreviewList = () => {
   const [show, setShow] = useState(false);
   const [player, setPlayer] = useState('');
   const [playerList, setPlayerList] = useState([]);
+  const storage = firebaseStorage.ref();
 
   const addPlayer = (newElement) => setPlayerList((oldArray) => [...oldArray, newElement]);
 
@@ -20,6 +23,25 @@ const PreviewList = () => {
     };
     // eslint-disable-next-line
   }, [data]);
+
+  const uploadFiles = (player) => {
+    const { documentNumber, listFiles, name } = player;
+    console.log(player)
+    listFiles.forEach((file, idx) => {
+      const fileRef = storage.child(`${documentNumber}/data/${documentNumber}_${name}_${idx}.csv`);
+      fileRef.put(file)
+        .then(() => dispatchNotification({ text: `Archivos de ${player.name} subidos`, type: 'success' }))
+        .catch((err) =>dispatchNotification({ text: err.message, type: 'danger' }));
+    });
+  };
+
+  const startProccess = async () => {
+    await playerList.forEach((player) => {
+      uploadFiles(player)
+    });
+    BackendPlayer.startProcessPlayer(player)
+      .then((res) => console.log(res));
+  }
 
   const deletePlayer = (documentNumber) => {
     const newTaskList = playerList.filter((player) => player.documentNumber !== documentNumber);
@@ -83,7 +105,7 @@ const PreviewList = () => {
         </ListGroup>
     </div>
     <div className={'main-container__preview-list--button'}>
-      <Button variant="success">Procesar</Button>
+      <Button variant={'success'} onClick={() => startProccess()}>Procesar</Button>
     </div>
   </div>);
 };
