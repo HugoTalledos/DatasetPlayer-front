@@ -13,7 +13,7 @@ const FormConfig = () => {
   const [sex, setSex] = useState(0);
   const [experience, setExperience] = useState(0);
   const [efectivity, setEfectivity] = useState(0);
-  const [root, setRoot] = useState('');
+  const [listFiles, setListFiles] = useState('');
   const [rootFinish, setRootFinish] = useState('');
   const [separator, setSeparator] = useState(',');
   const [decimalSeparator, setDecimalSeparator] = useState('.');
@@ -26,6 +26,7 @@ const FormConfig = () => {
   const { data, dispatchData } = useContext(AppContext);
   const { dispatchData: dispatchNotification } = useContext(NotificationContext);
 
+  const addFiles = (element) => setListFiles((oldArray) => [...oldArray, element]);
   useEffect(() => {
     switch(metric) {
       case '1': setUnity('°'); break;
@@ -40,20 +41,20 @@ const FormConfig = () => {
 
     switch (action) {
       case 'clear':
-        if (!root || root.length === 0 || !documentNumber || documentNumber === 0) {
-          dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'danger' });
+        if (!listFiles || listFiles.length === 0 || !documentNumber || documentNumber === 0) {
+          dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'error' });
         } else savePlayer('clear');
         break;
       case 'graph':
         if  (!documentNumber || documentNumber.length === 0
-          || !root || root.length === 0
+          || !listFiles || listFiles.length === 0
           || !rootFinish || rootFinish.length === 0
           || !separator || separator.length === 0
           || !decimalSeparator || decimalSeparator.length === 0
           || !metric || metric.length === 0
           || !unity || unity.length === 0
           || !columns || columns.length === 0) {
-          dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'danger' });
+          dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'error' });
         } else savePlayer('graph');
         break;
       default:
@@ -64,7 +65,7 @@ const FormConfig = () => {
           || !sex || sex.length === 0
           || !experience || experience.length === 0
           || !efectivity || efectivity.length === 0
-          || !root || root.length === 0
+          || !listFiles || listFiles.length === 0
           || !rootFinish || rootFinish.length === 0
           || !separator || separator.length === 0
           || !decimalSeparator || decimalSeparator.length === 0
@@ -72,9 +73,17 @@ const FormConfig = () => {
           || !unity || unity.length === 0 
           || !columns || columns.length === 0
           ) {
-          dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'danger' });
+          dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'error' });
         } else savePlayer('run')
         break;
+    }
+  };
+
+  const listDocuments = (folder) => {
+    const files = folder.target.files;
+    const len = files.length;
+    for (let i=0; i<len; i+=1) {
+      addFiles(files[i]);
     }
   };
 
@@ -83,7 +92,7 @@ const FormConfig = () => {
       dispatchData({
         player: {
           age, clear, columns, decimalSeparator, documentNumber,
-          efectivity, experience, graph, metric, name, root,
+          efectivity, experience, graph, metric, name, listFiles,
           rootFinish, separator, sex, temp, unity, weight,
         }
       });
@@ -93,7 +102,7 @@ const FormConfig = () => {
       setExperience(0);
       setExperience(0);
       setName('');
-      setRoot('');
+      setListFiles('');
       setRootFinish('');
       setSex(0);
       setWeight(0);
@@ -162,10 +171,9 @@ const FormConfig = () => {
         <Form>
           <Form.Group as={Row} className={'mb-3'}>
             <Col sm={'6'}>
-              <FloatingLabel label={'Ubicación de archivos'} className={'mb-3'}>
-                <Form.Control type={'text'} value={root}
-                              onChange={(e) => setRoot(e.target.value)}/>
-              </FloatingLabel>
+              <input type={'file'} id={'documents'} multiple
+                     accept={'.csv'} onChange={(e) => listDocuments(e)}/>
+              <Form.Label style={{ textAlign: 'left' }}>Subir archivos</Form.Label>
             </Col>
             <Col sm={'6'}>
               <FloatingLabel label={'Ubicación de salida'} className={'mb-3'}>
