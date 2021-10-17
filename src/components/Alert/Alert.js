@@ -25,7 +25,7 @@ const Alert = () => {
   const renderIcon = () => {
     switch (data.type) {
       case 'warning': return(<WarningSVG className={'iconNotification warning'}/>);
-      case 'danger': return(<AlertSVG className={'iconNotification danger'}/>);
+      case 'error': return(<AlertSVG className={'iconNotification danger'}/>);
       case 'success': return(<SuccesSVG className={'iconNotification success'}/>);
       default: return(<DefaultSVG className={'iconNotification'}/>);
     }
@@ -35,7 +35,7 @@ const Alert = () => {
     <Toast show={data.show} delay={notificationTimeout}
            bg={'ligth'} animation autohide>
       <Toast.Header closeButton={false}>
-        {renderIcon('danger')}
+        {renderIcon(data.type)}
         <strong className="me-auto">Notification</strong>
       </Toast.Header>
       <Toast.Body>{data.text}</Toast.Body>
