@@ -31,7 +31,7 @@ const Alert = () => {
     }
   }
 
-  return (<ToastContainer className="d-inline-block m-1" position={'top-start'}>
+  return (<ToastContainer className="d-inline-block m-1" position={'top-center'}>
     <Toast show={data.show} delay={notificationTimeout}
            bg={'ligth'} animation autohide>
       <Toast.Header closeButton={false}>
