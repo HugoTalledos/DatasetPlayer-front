@@ -26,20 +26,38 @@ const PreviewList = () => {
 
   const uploadFiles = (player) => {
     const { documentNumber, listFiles, name } = player;
-    console.log(player)
+    const listPromises = [];
     listFiles.forEach((file, idx) => {
       const fileRef = storage.child(`${documentNumber}/data/${documentNumber}_${name}_${idx}.csv`);
-      fileRef.put(file)
-        .then(() => dispatchNotification({ text: `Archivos de ${player.name} subidos`, type: 'success' }))
-        .catch((err) =>dispatchNotification({ text: err.message, type: 'danger' }));
+      listPromises.push(fileRef.put(file))
     });
+
+    return Promise.all([listPromises])
+      .then(() => dispatchNotification({ text: `Archivos de ${player.name} subidos`, type: 'success' }))
+      .catch((err) =>dispatchNotification({ text: err.message, type: 'danger' }));
   };
 
   const startProccess = async () => {
     if (localStorage.getItem('token')) {
-      await playerList.forEach((player) => uploadFiles(player));
-      BackendPlayer.startProcessPlayer(player)
-        .then((res) => console.log(res));
+      for (let idx in playerList) {
+        const { graph, clear } = playerList[idx];
+        if(graph) {
+          await uploadFiles(playerList[idx])
+          .then(async () => {
+            await BackendPlayer.startGraphMode(playerList[idx])
+            .then((res) => {
+              if (res.success) dispatchNotification({ text: res.data, type: 'success' });
+              else dispatchNotification({ text: res.error, type: 'error' });
+              deletePlayer(playerList[idx].documentNumber)
+            });
+          })
+          .catch((err) => dispatchNotification({ text: err.message, type: 'error' }));
+        } else if(clear) {
+          //Limpiar ruta
+        } else { 
+          //Procesar y hacer graficas de banda normal
+        }
+      }
     } else {
       dispatchNotification({ text: 'Debes iniciar sesión para iniciar el proceso', type: 'error'})
     }
