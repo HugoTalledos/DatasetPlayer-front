@@ -1,7 +1,8 @@
 .main-container {
   display: flex;
   flex-direction: row;
-  margin: 3em;
+  margin: 2em;
+  max-height: 80vh;
 }
 
 .btn-success {
