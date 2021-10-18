@@ -36,11 +36,13 @@ const PreviewList = () => {
   };
 
   const startProccess = async () => {
-    await playerList.forEach((player) => {
-      uploadFiles(player)
-    });
-    BackendPlayer.startProcessPlayer(player)
-      .then((res) => console.log(res));
+    if (localStorage.getItem('token')) {
+      await playerList.forEach((player) => uploadFiles(player));
+      BackendPlayer.startProcessPlayer(player)
+        .then((res) => console.log(res));
+    } else {
+      dispatchNotification({ text: 'Debes iniciar sesión para iniciar el proceso', type: 'error'})
+    }
   }
 
   const deletePlayer = (documentNumber) => {
@@ -67,7 +69,7 @@ const PreviewList = () => {
           <p><strong>Sexo</strong>: {playerInfo.sex}</p>
           <p><strong>Años de entrenamiento</strong>: {playerInfo.experience}</p>
           <p><strong>Efectividad</strong>: {playerInfo.efectivity}</p>
-          <p><strong>Ubicación de archivos</strong>: {playerInfo.root}</p>
+          <p><strong>Cantidad de archivos</strong>: {playerInfo.listFiles.length}</p>
           <p><strong>Ubicación de salida</strong>: {playerInfo.rootFinish}</p>
           <p><strong>Separador</strong>: {playerInfo.separator}</p>
           <p><strong>Separador decimal</strong>: {playerInfo.decimalSeparator}</p>
