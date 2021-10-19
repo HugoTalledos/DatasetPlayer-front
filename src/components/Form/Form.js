@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Form, Row, Col, FloatingLabel, Button } from "react-bootstrap";
 import AppContext from "../../context/app-context";
 import NotificationContext from "../../context/notification-context";
+import ModalContext from "../../context/modal-context";
+import BackendPlayer from '../../api/backendApi';
 
 import './Form.css';
 
@@ -25,6 +27,7 @@ const FormConfig = () => {
   const [graph, setGraph] = useState(false);
   const { data, dispatchData } = useContext(AppContext);
   const { dispatchData: dispatchNotification } = useContext(NotificationContext);
+  const { data: dataModal, dispatchData: dispatchModal } = useContext(ModalContext);
 
   const addFiles = (element) => setListFiles((oldArray) => [...oldArray, element]);
   useEffect(() => {
@@ -36,14 +39,36 @@ const FormConfig = () => {
     }
   }, [metric]);
 
+  useEffect(() => {
+    if (dataModal.isAction) {
+      BackendPlayer.startClearMode(documentNumber)
+        .then((resp) => {
+          if (resp.success) {
+            dispatchNotification({ text: resp.data, type: 'success' })
+          }
+          dispatchModal({});
+        })
+        .catch((e) => {
+          dispatchNotification({ text: e.message, type: 'error' })
+          dispatchModal({});
+        });
+    }
+    //eslint-disable-next-line
+  }, [dataModal])
+
   const validateFields = () => {
     const action = clear ? 'clear' : graph && 'graph';
 
     switch (action) {
       case 'clear':
-        if (!listFiles || listFiles.length === 0 || !documentNumber || documentNumber === 0) {
+        if (!documentNumber || documentNumber === 0) {
           dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'error' });
-        } else savePlayer();
+        } else {
+          dispatchModal({
+            title: '¿Seguro que quieres realizar esta acción?',
+            text: 'Esta accion es irreversible y borrará las imagenes y archivos previamente cargados. (La informacion seguira presente en el dataset)',
+          })
+        };
         break;
       case 'graph':
         if  (!documentNumber || documentNumber.length === 0
@@ -95,6 +120,7 @@ const FormConfig = () => {
         rootFinish, separator, sex, temp, unity, weight,
       }
     });
+    console.log(data);
     setDocumentNumber('');
     setAge(0);
     setEfectivity(0);
@@ -134,7 +160,7 @@ const FormConfig = () => {
             </Col>
             <Col sm={'6'}>
               <FloatingLabel label={'Nombre'} className={'mb-3'}>
-                <Form.Control type={'text'}
+                <Form.Control type={'text'} disabled={clear}
                               value={name} onChange={(e) => setName(e.target.value)}/>
               </FloatingLabel>
             </Col>
@@ -235,7 +261,7 @@ const FormConfig = () => {
               </FloatingLabel>
             </Form.Group>
             <Button variant={'success'} onClick={() => validateFields()}>
-              Agregar
+              { clear ? 'Limpiar' : 'Agregar' }
             </Button>
           </Form>
         </div>
