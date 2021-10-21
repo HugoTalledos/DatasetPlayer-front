@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Form, Row, Col, FloatingLabel, Button } from "react-bootstrap";
 import AppContext from "../../context/app-context";
 import NotificationContext from "../../context/notification-context";
+import BackendApi from '../../api/backendApi';
 
 
 import './Form.css';
@@ -23,6 +24,7 @@ const FormConfig = () => {
   const [columns, setColumns] = useState('muñeca#codo#hombro#cadera#rodilla#tobillo');
   const [clear, setClear] = useState(false);
   const [graph, setGraph] = useState(false);
+  const [playerList, setPlayerList] = useState([]);
   const { data, dispatchData } = useContext(AppContext);
   const { dispatchData: dispatchNotification } = useContext(NotificationContext);
 
@@ -36,14 +38,20 @@ const FormConfig = () => {
     }
   }, [metric]);
 
-  const validateFields = () => {
-    const action = clear ? 'clear' : graph && 'graph';
+  useEffect(() => {
+    BackendApi.getPlayersInfo()
+    .then((resp) => setPlayerList(resp.data))
+    .catch((error) => dispatchNotification({ text: error.message, type: 'error' }));
+    //eslint-disable-next-line
+  }, []);
 
+  const validateFields = () => {
+    const action = clear ? 'clear' : graph ? 'graph' : 'other';
     switch (action) {
       case 'clear':
         if (!documentNumber || documentNumber === 0) {
           dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'error' });
-        }
+        } else savePlayer();
         break;
       case 'graph':
         if  (!documentNumber || documentNumber.length === 0
@@ -94,7 +102,6 @@ const FormConfig = () => {
         separator, sex, unity, weight, gestureType
       }
     });
-    console.log(data);
     setDocumentNumber('');
     setAge(0);
     setEfectivity(0);
@@ -123,10 +130,25 @@ const FormConfig = () => {
         <Form>
           <Form.Group as={Row} className={'mb-3'}>
             <Col sm={'6'}>
-              <FloatingLabel label={'Número de documento'} className={'mb-3'}>
-                <Form.Control type={'number'} value={documentNumber}
-                              onChange={(e) => setDocumentNumber(e.target.value)}/>
-              </FloatingLabel>
+            <FloatingLabel label={'Número de documento'} className={'mb-3'}>
+              {
+                !clear
+                ? (<Form.Control type={'number'} value={documentNumber}
+                              onChange={(e) => setDocumentNumber(e.target.value)}/>)
+                : (<Form.Select aria-label={'Sex player select'}
+                                value={documentNumber} 
+                                onChange={(e) => setDocumentNumber(e.target.value)}>
+                      <option value={'0'}>----------</option>
+                      { playerList && playerList.length >= 0
+                        && playerList.map((player) =>(
+                          <option value={player.documentNumber}>
+                            {player.documentNumber} ({player.playerName})
+                          </option>)
+                        )
+                      }
+                    </Form.Select>)
+              }
+            </FloatingLabel>
             </Col>
             <Col sm={'6'}>
               <FloatingLabel label={'Nombre'} className={'mb-3'}>
