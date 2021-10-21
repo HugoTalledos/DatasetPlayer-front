@@ -1,7 +1,7 @@
 import React from 'react';
 import PlayerList from '../PlayerList/PlayerList';
 import Graphics from '../Graphics/Graphics';
-import ReportContext from './data/report-data';
+import ReportContext from '../../data/report-data';
 
 const Report = () => {
   return (
