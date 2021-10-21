@@ -43,6 +43,7 @@ const Login = () => {
             token = userToken;
             localStorage.setItem('token', token);
           });
+
         dispatchNotification({ text: `¡Bienvenido ${userInfo.name}!` });
         setReady(true);
         setUserName(userInfo.name);
@@ -72,12 +73,9 @@ const Login = () => {
   return (<>
     <Navbar bg={'dark'} variant={'dark'}>
       <Container>
-        <Navbar.Brand>Formulario</Navbar.Brand>
+        <Navbar.Brand href={'/'}>Formulario</Navbar.Brand>
         <Navbar.Toggle />
-        <Nav.Link href="#features">Reportes</Nav.Link>
-        <Button onClick={() => register()} variant={'dark'}>
-          Descargar datasets
-        </Button>
+        <Nav.Link href={'/reportes'}>Reportes</Nav.Link>
         <Navbar.Collapse className={'justify-content-end'}>
           {
             ready
