@@ -9,3 +9,22 @@
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4);
   border-radius: 5px;
 }
+
+
+.main-container__report--imgs{
+  display: grid;
+  grid-auto-flow: dense;
+  grid-auto-rows: 22rem;
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+}
+
+.main-container__report--imgs img {
+  width: 100%;
+}
+
+.main-container__report--warning {
+  margin: auto;
+  font-weight: 500;
+  line-height: 1.2;
+  font-size: 1.75rem;
+}
