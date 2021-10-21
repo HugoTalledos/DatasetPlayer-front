@@ -4,7 +4,6 @@ import modalMessagecontext from '../context/modal-context';
 
 const reducer = (data, action) => {
   if (action && action.text && action.text.length > 0) {
-    console.log(action)
     return {
       ...data,
       show: true,
