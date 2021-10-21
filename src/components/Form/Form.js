@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Form, Row, Col, FloatingLabel, Button } from "react-bootstrap";
 import AppContext from "../../context/app-context";
 import NotificationContext from "../../context/notification-context";
-import ModalContext from "../../context/modal-context";
-import BackendPlayer from '../../api/backendApi';
+
 
 import './Form.css';
 
@@ -16,18 +15,16 @@ const FormConfig = () => {
   const [experience, setExperience] = useState(0);
   const [efectivity, setEfectivity] = useState(0);
   const [listFiles, setListFiles] = useState('');
-  const [rootFinish, setRootFinish] = useState('');
   const [separator, setSeparator] = useState(',');
   const [decimalSeparator, setDecimalSeparator] = useState('.');
   const [metric, setMetric] = useState(0);
   const [unity, setUnity] = useState('');
+  const [gestureType, setGestureType] = useState(0);
   const [columns, setColumns] = useState('muñeca#codo#hombro#cadera#rodilla#tobillo');
-  const [temp, setTemp] = useState(true);
   const [clear, setClear] = useState(false);
   const [graph, setGraph] = useState(false);
   const { data, dispatchData } = useContext(AppContext);
   const { dispatchData: dispatchNotification } = useContext(NotificationContext);
-  const { data: dataModal, dispatchData: dispatchModal } = useContext(ModalContext);
 
   const addFiles = (element) => setListFiles((oldArray) => [...oldArray, element]);
   useEffect(() => {
@@ -39,23 +36,6 @@ const FormConfig = () => {
     }
   }, [metric]);
 
-  useEffect(() => {
-    if (dataModal.isAction) {
-      BackendPlayer.startClearMode(documentNumber)
-        .then((resp) => {
-          if (resp.success) {
-            dispatchNotification({ text: resp.data, type: 'success' })
-          }
-          dispatchModal({});
-        })
-        .catch((e) => {
-          dispatchNotification({ text: e.message, type: 'error' })
-          dispatchModal({});
-        });
-    }
-    //eslint-disable-next-line
-  }, [dataModal])
-
   const validateFields = () => {
     const action = clear ? 'clear' : graph && 'graph';
 
@@ -63,17 +43,11 @@ const FormConfig = () => {
       case 'clear':
         if (!documentNumber || documentNumber === 0) {
           dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'error' });
-        } else {
-          dispatchModal({
-            title: '¿Seguro que quieres realizar esta acción?',
-            text: 'Esta accion es irreversible y borrará las imagenes y archivos previamente cargados. (La informacion seguira presente en el dataset)',
-          })
-        };
+        }
         break;
       case 'graph':
         if  (!documentNumber || documentNumber.length === 0
           || !listFiles || listFiles.length === 0
-          || !rootFinish || rootFinish.length === 0
           || !separator || separator.length === 0
           || !decimalSeparator || decimalSeparator.length === 0
           || !metric || metric.length === 0
@@ -91,12 +65,12 @@ const FormConfig = () => {
           || !experience || experience.length === 0
           || !efectivity || efectivity.length === 0
           || !listFiles || listFiles.length === 0
-          || !rootFinish || rootFinish.length === 0
           || !separator || separator.length === 0
           || !decimalSeparator || decimalSeparator.length === 0
           || !metric || metric.length === 0
           || !unity || unity.length === 0 
           || !columns || columns.length === 0
+          || !gestureType || gestureType.length === 0
           ) {
           dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'error' });
         } else savePlayer()
@@ -117,7 +91,7 @@ const FormConfig = () => {
       player: {
         age, clear, columns, decimalSeparator, documentNumber,
         efectivity, experience, graph, metric, name, listFiles,
-        rootFinish, separator, sex, temp, unity, weight,
+        separator, sex, unity, weight, gestureType
       }
     });
     console.log(data);
@@ -128,7 +102,6 @@ const FormConfig = () => {
     setExperience(0);
     setName('');
     setListFiles('');
-    setRootFinish('');
     setSex(0);
     setWeight(0);
   };
@@ -138,9 +111,6 @@ const FormConfig = () => {
         <div className={'main-container__form-mode'}>
           <h2>Modos </h2>
           <div className={'main-container__form-mode--switches'}>
-            <Form.Check type={'switch'} disabled={graph || clear}
-                        id={'delTemp-switch'} label={'Borrar Temporales'}
-                        checked={temp} onChange={(e) => setTemp(e.target.checked)}/>
             <Form.Check type={'switch'} label={'Limpieza'}
                         id={'clear-switch'} disabled={graph}
                         checked={clear} onChange={(e) => setClear(e.target.checked)}/>
@@ -214,9 +184,14 @@ const FormConfig = () => {
                 <Form.Label style={{ textAlign: 'left' }}>Subir archivos</Form.Label>
               </Col>
               <Col sm={'6'}>
-                <FloatingLabel label={'Ubicación de salida'} className={'mb-3'}>
-                  <Form.Control type={'text'} disabled={clear} value={rootFinish}
-                                onChange={(e) => setRootFinish(e.target.value)}/>
+                <FloatingLabel label={'Gesto'} className={'mb-3'}>
+                  <Form.Select aria-label={'GEsture Select'} disabled={clear}
+                              value={gestureType} onChange={(e) => setGestureType(e.target.value)}>
+                    <option value={'0'}>----------</option>
+                    <option value={'1'}>Saque con Salto</option>
+                    <option value={'2'}>Saque sin Salto</option>
+                    <option value={'3'}>Remate</option>
+                  </Form.Select>
                 </FloatingLabel>
               </Col>
             </Form.Group>
