@@ -1,17 +1,20 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { ListGroup, Button, Modal } from 'react-bootstrap';
 import AppContext from '../../context/app-context';
 import NotificationContext from '../../context/notification-context';
+import ModalContext from "../../context/modal-context";
 import BackendPlayer from '../../api/backendApi';
 import { firebaseStorage } from '../../firebase/firebase';
 import './PreviewList.css';
 
 const PreviewList = () => {
   const { data } = useContext(AppContext);
-  const { dispatchData: dispatchNotification } = useContext(NotificationContext);
   const [show, setShow] = useState(false);
+  const [documentNumber, setDocumentNumber] = useState('');
   const [player, setPlayer] = useState('');
   const [playerList, setPlayerList] = useState([]);
+  const { dispatchData: dispatchNotification } = useContext(NotificationContext);
+  const { data: dataModal, dispatchData: dispatchModal } = useContext(ModalContext);
   const storage = firebaseStorage.ref();
 
   const addPlayer = (newElement) => setPlayerList((oldArray) => [...oldArray, newElement]);
@@ -23,6 +26,23 @@ const PreviewList = () => {
     };
     // eslint-disable-next-line
   }, [data]);
+
+  useEffect(() => {
+    if (dataModal.isAction) {
+      BackendPlayer.startClearMode(documentNumber)
+        .then((resp) => {
+          if (resp.success) {
+            dispatchNotification({ text: resp.data, type: 'success' })
+          }
+          dispatchModal({});
+        })
+        .catch((e) => {
+          dispatchNotification({ text: e.message, type: 'error' })
+          dispatchModal({});
+        });
+    }
+    //eslint-disable-next-line
+  }, [dataModal])
 
   const uploadFiles = (player) => {
     const { documentNumber, listFiles, name } = player;
@@ -43,8 +63,8 @@ const PreviewList = () => {
         const { graph, clear } = playerList[idx];
         if(graph) {
           await uploadFiles(playerList[idx])
-          .then(async () => {
-            await BackendPlayer.startGraphMode(playerList[idx])
+          .then(() => {
+            BackendPlayer.startGraphMode(playerList[idx])
             .then((res) => {
               if (res.success) dispatchNotification({ text: res.data, type: 'success' });
               else dispatchNotification({ text: res.error, type: 'error' });
@@ -53,9 +73,22 @@ const PreviewList = () => {
           })
           .catch((err) => dispatchNotification({ text: err.message, type: 'error' }));
         } else if(clear) {
-          //Limpiar ruta
+          setDocumentNumber(playerList[idx].documentNumber)
+          dispatchModal({
+            title: '¿Seguro que quieres realizar esta acción?',
+            text: 'Esta accion es irreversible y borrará las imagenes y archivos previamente cargados. (La informacion seguira presente en el dataset)',
+          })
         } else { 
-          //Procesar y hacer graficas de banda normal
+          await uploadFiles(playerList[idx])
+          .then(() => {
+            BackendPlayer.startProcess(playerList[idx])
+            .then((res) => {
+              if (res.success) dispatchNotification({ text: res.data, type: 'success' });
+              else dispatchNotification({ text: res.error, type: 'error' });
+              deletePlayer(playerList[idx].documentNumber)
+            });
+          })
+          .catch((err) => dispatchNotification({ text: err.message, type: 'error' }));
         }
       }
     } else {
