@@ -20,7 +20,7 @@ const PreviewList = () => {
   const addPlayer = (newElement) => setPlayerList((oldArray) => [...oldArray, newElement]);
 
   useMemo(() => {
-    if (data.player.name.length !== 0) {
+    if (data.player.documentNumber.length !== 0) {
       addPlayer(data.player);
       dispatchNotification({ text: 'Jugador añadido a la lista', type: 'success' })
     };
@@ -150,7 +150,7 @@ const PreviewList = () => {
                               setPlayer(element);
                               setShow(true);
                             }}>
-              {element.documentNumber} - {element.name}
+              {element.documentNumber} - {element.name || '(Limpiar)'}
             </ListGroup.Item>
           </>))
         }
