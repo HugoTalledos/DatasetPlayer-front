@@ -26,6 +26,6 @@
 
 .main-container__form-mode--switches {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-bottom: 1.5em;
 }
