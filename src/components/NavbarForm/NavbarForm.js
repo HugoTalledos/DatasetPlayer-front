@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Navbar, Container, Button, NavDropdown } from 'react-bootstrap';
+import { Navbar, Container, Button, NavDropdown, Nav } from 'react-bootstrap';
 import { firebaseRef } from '../../firebase/firebase';
 import DataApi from '../../api/UserApi';
 import NotificationContext from '../../context/notification-context';
@@ -74,6 +74,10 @@ const Login = () => {
       <Container>
         <Navbar.Brand>Formulario</Navbar.Brand>
         <Navbar.Toggle />
+        <Nav.Link href="#features">Reportes</Nav.Link>
+        <Button onClick={() => register()} variant={'dark'}>
+          Descargar datasets
+        </Button>
         <Navbar.Collapse className={'justify-content-end'}>
           {
             ready
