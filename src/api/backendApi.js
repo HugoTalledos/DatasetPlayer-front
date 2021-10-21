@@ -14,4 +14,11 @@ export default class BackendPlayer {
     .then(getResponseData)
     .catch(escalateError);
   }
+
+  static startProcess(data) {
+    return api.post('startProcess', data,
+    { headers: { Authorization: localStorage.getItem('token') } })
+    .then(getResponseData)
+    .catch(escalateError);
+  }
 };
