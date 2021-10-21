@@ -1,0 +1,19 @@
+.main-container__list-player {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  margin: auto 0;
+  padding: 1.5em;
+  border-radius: 5px;
+  height: 80vh;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4);
+}
+
+.main-container__list-player--list {
+  overflow-y: auto;
+  margin: 1em 0
+}
+
+.list-group-item:hover {
+  background-color: #F4F4F8;
+}
