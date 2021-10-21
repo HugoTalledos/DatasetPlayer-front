@@ -23,13 +23,12 @@ const PlayerList = () => {
     <ListGroup>
       {
         playerList && playerList.length > 0
-        && playerList.map((player) => {
-          return (<ListGroup.Item key={`${player.documentNumber}`}
-                          style = {{ cursor: 'pointer' }}
-                          onClick={() => dispatchData({ playerId: player.documentNumber})}>
-                      {player.name}
-          </ListGroup.Item>)
-        })
+        && playerList.map((player) => 
+          (<ListGroup.Item key={`${player.documentNumber}`}
+                           style = {{ cursor: 'pointer' }}
+                           onClick={() => dispatchData({ playerId: player.documentNumber})}>
+                      {player.playerName}
+          </ListGroup.Item>))
       }
       </ListGroup>
   </div>
