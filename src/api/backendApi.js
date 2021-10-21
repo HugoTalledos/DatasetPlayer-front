@@ -21,4 +21,11 @@ export default class BackendPlayer {
     .then(getResponseData)
     .catch(escalateError);
   }
+
+  static getPlayersInfo(){
+    return api.get('getPlayers',
+    { headers: { Authorization: localStorage.getItem('token') } })
+    .then(getResponseData)
+    .catch(escalateError);
+  }
 };
