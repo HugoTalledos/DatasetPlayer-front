@@ -4,12 +4,12 @@ import Graphics from '../Graphics/Graphics';
 import ReportContext from '../../data/report-data';
 
 const Report = () => {
-  return (
+  return (<div className={'main-container'}>
     <ReportContext>
       <PlayerList/>
       <Graphics/>
     </ReportContext>
-  )
+  </div>)
 };
 
 export default Report;
