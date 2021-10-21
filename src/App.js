@@ -1,29 +1,28 @@
-import Form from './components/Form/Form';
-import PreviewList from './components/PreviewList/PreviewList';
-import Notification from './components/Alert/Alert';
-import ModalAlert from './components/Alert/ModalAlert';
-import AppContext from './data/app-data';
+import { Router, Route } from 'react-router';
+import FormConfig from './components/MainScreen/MainScreen';
+import Report from './components/Report/Report';
 import Navbar from './components/NavbarForm/NavbarForm';
 import PushNotificationContext from './data/notification-data';
+import history from './history';
 import ModalContext from './data/modal-data';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 const App = () => {
   return (<>
-  <ModalContext>
-    <PushNotificationContext>
-      <Navbar/>
-      <div className={'main-container'}>
-        <AppContext>
-          <Form/>
-          <PreviewList/>
-          <Notification/>
-          <ModalAlert/>
-        </AppContext>
-      </div>
-    </PushNotificationContext>
-  </ModalContext>
+  <Router history={history}>
+    <ModalContext>
+      <PushNotificationContext>
+        <Navbar/>
+          <Route exact path={'/'}>
+            <FormConfig/>
+          </Route>
+          <Route exact path={'/reportes'}>
+            <Report/>
+          </Route>
+      </PushNotificationContext>
+    </ModalContext>
+  </Router>
   </>);
 }
 
