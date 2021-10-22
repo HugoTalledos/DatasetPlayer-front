@@ -1,7 +1,7 @@
 import { api, getResponseData, escalateError } from './index';
 
 export default class BackendPlayer {
-  static startGraphMode(data, token) {
+  static startGraphMode(data) {
     return api.post('graphMode', data,
       { headers: { Authorization: localStorage.getItem('token') } })
       .then(getResponseData)
