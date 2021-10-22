@@ -10,6 +10,7 @@ import './PreviewList.css';
 const PreviewList = () => {
   const { data } = useContext(AppContext);
   const [show, setShow] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
   const [documentNumber, setDocumentNumber] = useState('');
   const [player, setPlayer] = useState('');
   const [playerList, setPlayerList] = useState([]);
@@ -35,6 +36,7 @@ const PreviewList = () => {
             dispatchNotification({ text: resp.data, type: 'success' })
           }
           dispatchModal({});
+          deletePlayer(documentNumber)
         })
         .catch((e) => {
           dispatchNotification({ text: e.message, type: 'error' })
@@ -58,6 +60,7 @@ const PreviewList = () => {
   };
 
   const startProccess = async () => {
+    setIsRunning(true);
     if (localStorage.getItem('token')) {
       for (let idx in playerList) {
         const { graph, clear } = playerList[idx];
@@ -68,12 +71,13 @@ const PreviewList = () => {
             .then((res) => {
               if (res.success) dispatchNotification({ text: res.data, type: 'success' });
               else dispatchNotification({ text: res.error, type: 'error' });
-              deletePlayer(playerList[idx].documentNumber)
-            });
+              deletePlayer(playerList[idx].documentNumber);
+            })
+            .catch((e) => dispatchNotification({ text: e.message, type: 'error' }));
           })
           .catch((err) => dispatchNotification({ text: err.message, type: 'error' }));
         } else if(clear) {
-          setDocumentNumber(playerList[idx].documentNumber)
+          setDocumentNumber(playerList[idx].documentNumber);
           dispatchModal({
             title: '¿Seguro que quieres realizar esta acción?',
             text: 'Esta accion es irreversible y borrará las imagenes y archivos previamente cargados. (La informacion seguira presente en el dataset)',
@@ -85,8 +89,9 @@ const PreviewList = () => {
             .then((res) => {
               if (res.success) dispatchNotification({ text: res.data, type: 'success' });
               else dispatchNotification({ text: res.error, type: 'error' });
-              deletePlayer(playerList[idx].documentNumber)
-            });
+              deletePlayer(playerList[idx].documentNumber);
+            })
+            .catch((e) => dispatchNotification({ text: e.message, type: 'error' }));
           })
           .catch((err) => dispatchNotification({ text: err.message, type: 'error' }));
         }
@@ -127,6 +132,7 @@ const PreviewList = () => {
           <p><strong>Métrica</strong>: {playerInfo.metric}</p>
           <p><strong>Unidades</strong>: {playerInfo.unity}</p>
           <p><strong>Nombre de columnas</strong>: {playerInfo.columns}</p>
+          <p><strong>Nombre de columna de tiempo</strong>: {playerInfo.columnTime}</p>
         </>}
       </Modal.Body>
       <Modal.Footer>
@@ -146,11 +152,18 @@ const PreviewList = () => {
           && playerList.map((element, idx) => (<>
             <ListGroup.Item key={`${element.documentNumber}-${idx}`}
                             style = {{ cursor: 'pointer' }}
+                            className={'d-flex justify-content-between align-items-start'}
                             onClick={() => {
                               setPlayer(element);
                               setShow(true);
                             }}>
               {element.documentNumber} - {element.name || '(Limpiar)'}
+              { isRunning &&
+               (<div class="ripple-loader">
+                  <div></div>
+                  <div></div>
+                </div>)
+              }
             </ListGroup.Item>
           </>))
         }
