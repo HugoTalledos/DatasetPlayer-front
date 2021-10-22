@@ -5,27 +5,24 @@ import DataApi from '../../api/UserApi';
 import NotificationContext from '../../context/notification-context';
 
 const Login = () => {
-  const [ready, setReady] = useState(false);
   const [userName, setUserName] = useState('');
   const { dispatchData: dispatchNotification } = useContext(NotificationContext);
 
   let token;
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
+    if (localStorage.getItem('mail')) {
       dispatchNotification({ text: `¡Bienvenido de vuelta, ${localStorage.getItem('userName')}`});
       setUserName(localStorage.getItem('userName'));
-      setReady(true);
     }
     //eslint-disable-next-line
   }, []);
 
-  const addPerson = (userInfo, permissionId, token) => {
+  const addPerson = (userInfo, token) => {
     const data = {
       email: userInfo.email,
       id: firebaseRef.auth().currentUser.uid,
       userInfo,
-      permissionId,
       token,
     };
     DataApi.postUser(data)
@@ -38,34 +35,36 @@ const Login = () => {
     firebaseRef.auth().signInWithPopup(provider)
       .then(async (result) => {
         const userInfo = result.additionalUserInfo.profile;
+        console.log("🚀 ~ file: NavbarForm.js ~ line 41 ~ .then ~ userInfo", userInfo)
         await firebaseRef.auth().currentUser.getIdToken()
           .then((userToken) => {
             token = userToken;
             localStorage.setItem('token', token);
-          });
+          })
 
-        dispatchNotification({ text: `¡Bienvenido ${userInfo.name}!` });
-        setReady(true);
-        setUserName(userInfo.name);
         if (result.additionalUserInfo.isNewUser) {
           addPerson(userInfo, token);
         } else {
           if (!token || token.length <= 0) return;
           localStorage.setItem('userID', result.additionalUserInfo.profile.id);
         }
+          
+        dispatchNotification({ text: `¡Bienvenido ${userInfo.name}!` });
+        setUserName(userInfo.name);
         localStorage.setItem('userName', result.additionalUserInfo.profile.name)
-      })
-      .catch(err => console.log(err));
+        window.location.href = '/';
+      });
   };
 
   const signOut = () => {
     try {
       localStorage.removeItem('token');
       localStorage.removeItem('userID');
+      localStorage.removeItem('mail');
       dispatchNotification({ text: `Hasta luego ${localStorage.getItem('userName')}` })
       localStorage.removeItem('userName');
-      setReady(false);
       firebaseRef.auth().signOut();
+      window.location.href = '/';
     } catch (e) { // an error
     }
   };
@@ -78,7 +77,7 @@ const Login = () => {
         <Nav.Link href={'/reportes'}>Reportes</Nav.Link>
         <Navbar.Collapse className={'justify-content-end'}>
           {
-            ready
+            localStorage.getItem('mail')
             ? <NavDropdown title={`${userName}`}
               menuVariant={'dark'}>
                 <NavDropdown.Item onClick={() => signOut()}>Cerrar Sesión</NavDropdown.Item>
