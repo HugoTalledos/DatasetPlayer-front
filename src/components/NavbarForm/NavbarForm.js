@@ -35,7 +35,6 @@ const Login = () => {
     firebaseRef.auth().signInWithPopup(provider)
       .then(async (result) => {
         const userInfo = result.additionalUserInfo.profile;
-        console.log("🚀 ~ file: NavbarForm.js ~ line 41 ~ .then ~ userInfo", userInfo)
         await firebaseRef.auth().currentUser.getIdToken()
           .then((userToken) => {
             token = userToken;
