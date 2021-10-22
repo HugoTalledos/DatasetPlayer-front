@@ -3,7 +3,7 @@ import { api, escalateError, getResponseData } from './index';
 export default class DataApi {
   // Login
   static postUser(data) {
-    const { email, userInfo, id, permissionId, token } = data;
+    const { email, userInfo, id } = data;
     return api.post('users', {
       email,
       userData: {
@@ -13,9 +13,7 @@ export default class DataApi {
         hd: userInfo.hd,
         picture: userInfo.picture,
       },
-      permissionId,
-    },
-      { headers: { Authorization: token } })
+    })
       .then(getResponseData)
       .catch(escalateError);
   }
