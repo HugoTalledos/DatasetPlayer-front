@@ -11,9 +11,11 @@ const PlayerList = () => {
   const { dispatchData: dispatchNotification } = useContext(NotificationContext);
 
   useEffect(() => {
-    BackendApi.getPlayersInfo()
-    .then((resp) => setPlayerList(resp.data))
-    .catch((error) => dispatchNotification({ text: error.message, type: 'error' }));
+    if (localStorage.getItem('mail')) {
+      BackendApi.getPlayersInfo()
+      .then((resp) => setPlayerList(resp.data))
+      .catch((error) => dispatchNotification({ text: error.message, type: 'error' }));
+    }
     //eslint-disable-next-line
   }, []);
 
