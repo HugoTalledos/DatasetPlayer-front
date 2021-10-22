@@ -4,7 +4,7 @@ import AppContext from "../../context/app-context";
 import NotificationContext from "../../context/notification-context";
 import BackendApi from '../../api/backendApi';
 
-
+import Utils from "../../utils/utils";
 import './Form.css';
 
 const FormConfig = () => {
@@ -21,6 +21,7 @@ const FormConfig = () => {
   const [metric, setMetric] = useState(0);
   const [unity, setUnity] = useState('');
   const [gestureType, setGestureType] = useState(0);
+  const [columnTime, setColumnTime] = useState('Tiempo (ms)');
   const [columns, setColumns] = useState('muñeca#codo#hombro#cadera#rodilla#tobillo');
   const [clear, setClear] = useState(false);
   const [graph, setGraph] = useState(false);
@@ -39,51 +40,25 @@ const FormConfig = () => {
   }, [metric]);
 
   useEffect(() => {
-    BackendApi.getPlayersInfo()
-    .then((resp) => setPlayerList(resp.data))
-    .catch((error) => dispatchNotification({ text: error.message, type: 'error' }));
+    if (localStorage.getItem('mail')) {
+      BackendApi.getPlayersInfo()
+      .then((resp) => setPlayerList(resp.data))
+      .catch((error) => dispatchNotification({ text: error.message, type: 'error' }));
+    }
     //eslint-disable-next-line
   }, []);
 
   const validateFields = () => {
     const action = clear ? 'clear' : graph ? 'graph' : 'other';
-    switch (action) {
-      case 'clear':
-        if (!documentNumber || documentNumber === 0) {
-          dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'error' });
-        } else savePlayer();
-        break;
-      case 'graph':
-        if  (!documentNumber || documentNumber.length === 0
-          || !listFiles || listFiles.length === 0
-          || !separator || separator.length === 0
-          || !decimalSeparator || decimalSeparator.length === 0
-          || !metric || metric.length === 0
-          || !unity || unity.length === 0
-          || !columns || columns.length === 0) {
-          dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'error' });
-        } else savePlayer();
-        break;
-      default:
-        if (!documentNumber || documentNumber === 0
-          || !name || name.length === 0
-          || !age || age.length === 0
-          || !weight || weight.length === 0
-          || !sex || sex.length === 0
-          || !experience || experience.length === 0
-          || !efectivity || efectivity.length === 0
-          || !listFiles || listFiles.length === 0
-          || !separator || separator.length === 0
-          || !decimalSeparator || decimalSeparator.length === 0
-          || !metric || metric.length === 0
-          || !unity || unity.length === 0 
-          || !columns || columns.length === 0
-          || !gestureType || gestureType.length === 0
-          ) {
-          dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'error' });
-        } else savePlayer()
-        break;
-    }
+    const fields = {
+      age, clear, columns, decimalSeparator, documentNumber,
+      efectivity, experience, graph, metric, name, listFiles,
+      separator, sex, unity, weight, gestureType, columnTime
+    };
+
+    if (Utils.validateField(fields, action)) {
+      dispatchNotification({ text: 'Rellena todos los campos disponibles, por favor', type: 'error' });
+    } else savePlayer();
   };
 
   const listDocuments = (folder) => {
@@ -99,7 +74,7 @@ const FormConfig = () => {
       player: {
         age, clear, columns, decimalSeparator, documentNumber,
         efectivity, experience, graph, metric, name, listFiles,
-        separator, sex, unity, weight, gestureType
+        separator, sex, unity, weight, gestureType, columnTime
       }
     });
     setDocumentNumber('');
@@ -252,10 +227,18 @@ const FormConfig = () => {
               </Col>
             </Form.Group>
             <Form.Group as={Row} className={'mb-3'}>
-              <FloatingLabel label={'Nombre de columnas'} className={'mb-3'}>
-                <Form.Control as={'textarea'} disabled={clear} value={columns}
-                              onChange={(e) => setColumns(e.target.value)}/>
-              </FloatingLabel>
+              <Col sm={6}>
+                <FloatingLabel label={'Nombre de columnas'} className={'mb-3'}>
+                  <Form.Control as={'textarea'} disabled={clear} value={columns}
+                                onChange={(e) => setColumns(e.target.value)}/>
+                </FloatingLabel>
+              </Col>
+              <Col sm={6}>
+                <FloatingLabel label={'Columna de tiempo'} className={'mb-3'}>
+                  <Form.Control type={'text'} disabled={clear} value={columnTime}
+                                onChange={(e) => setColumnTime(e.target.value)}/>
+                </FloatingLabel>
+              </Col>
             </Form.Group>
             <Button variant={'success'} onClick={() => validateFields()}>
               { clear ? 'Limpiar' : 'Agregar' }
