@@ -6,14 +6,15 @@ const reducer = (data, action) => {
   if (action) {
     return {
       ...data,
-      playerId: action.playerId,
+      player: action.player,
+      gestureType: action.gestureType,
     };
   }
   return { ...data };
 };
 
 const ReportInformation = ({ children }) => {
-  const [data, dispatchData] = React.useReducer(reducer, { playerId: '' });
+  const [data, dispatchData] = React.useReducer(reducer, { player: {}, gestureType: '' });
   return (
     <ReportContext.Provider value={{ data, dispatchData }}>
       {children}
