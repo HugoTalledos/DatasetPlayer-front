@@ -183,7 +183,7 @@ const FormConfig = () => {
         </Col>
         <Col of sm={'4'}>
           <Card>
-            <img alt={'User default'} style={{ padding: '1em', maxWidth: '100%', maxHeight: '150px'}}
+            <img alt={'User default'} style={{ padding: '1em', maxWidth: '100%', maxHeight: '140px'}}
                  src={playerPhoto ? URL.createObjectURL(playerPhoto) : userLogo } />
             <Card.Body>
               <Card.Title>Foto de usuario</Card.Title>
