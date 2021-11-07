@@ -7,20 +7,6 @@
   padding: 1.5em;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4);
   border-radius: 5px;
-}
-
-.main-container__form-info {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1em;
-}
-
-.main-container__form-config {
-  text-align: center;
-}
-
-.main-container__form-mode {
   text-align: center;
 }
 
