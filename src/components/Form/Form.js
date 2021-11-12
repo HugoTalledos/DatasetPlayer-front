@@ -82,7 +82,8 @@ const FormConfig = () => {
       player: {
         age, clear, columns, decimalSeparator, documentNumber,
         efectivity, experience, graph, metric, name, listFiles,
-        separator, sex, unity, weight, gestureType, columnTime
+        separator, sex, unity, weight, gestureType, columnTime,
+        playerPhoto,
       }
     });
     setDocumentNumber('');

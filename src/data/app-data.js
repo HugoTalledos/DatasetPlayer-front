@@ -15,23 +15,24 @@ const reducer = (data, action) => {
 const AppInformation = ({ children }) => {
   const [data, dispatchData] = React.useReducer(reducer, {
     player: {
-      documentNumber: '',
-      name: '',
       age: 0,
-      weight: 0,
-      sex: '',
-      experience: 0,
+      clear: false,
+      columns: '',
+      decimalSeparator: '.',
+      documentNumber: '',
       efectivity: 0,
+      experience: 0,
+      graph: false,
       listFiles: [],
+      metric: '',
+      name: '',
+      picture: [],
       rootFinish: '',
       separator: ',',
-      decimalSeparator: '.',
-      metric: '',
-      unity: '',
-      columns: '',
-      clear: false,
-      graph: false,
+      sex: '',
       temp: false,
+      unity: '',
+      weight: 0,
     }
   });
   return (

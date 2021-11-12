@@ -28,4 +28,12 @@ export default class BackendPlayer {
     .then(getResponseData)
     .catch(escalateError);
   }
+
+  static addPlayer(data) {
+    console.log({ ...data, status: 0 });
+    return api.post('createPlayers', { ...data, status: 0 },
+    { headers: { Authorization: localStorage.getItem('token') } })
+    .then(getResponseData)
+    .catch(escalateError);
+  }
 };
