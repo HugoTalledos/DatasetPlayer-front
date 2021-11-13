@@ -37,4 +37,16 @@ export default class Utils {
           );
     }  
   }
+
+  static logOut (firestoreRef) {
+    try {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userID');
+      localStorage.removeItem('mail');
+      localStorage.removeItem('userName');
+      firestoreRef.auth().signOut();
+      window.location.href = '/';
+    } catch (e) { // an error
+    }
+  }
 }
