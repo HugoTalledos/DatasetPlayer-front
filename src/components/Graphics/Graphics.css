@@ -38,3 +38,9 @@
   line-height: 1.2;
   font-size: 1.75rem;
 }
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 1em;
+}
