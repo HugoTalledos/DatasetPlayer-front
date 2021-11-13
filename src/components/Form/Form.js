@@ -7,6 +7,7 @@ import userLogo from '../../res/icons/user.png';
 
 import Utils from '../../utils/utils';
 import './Form.css';
+import { firebaseRef } from '../../firebase/firebase';
 
 const FormConfig = () => {
   const [documentNumber, setDocumentNumber] = useState('');
@@ -45,7 +46,10 @@ const FormConfig = () => {
     if (localStorage.getItem('mail')) {
       BackendApi.getPlayersInfo()
       .then((resp) => setPlayerList(resp.data))
-      .catch((error) => dispatchNotification({ text: error.message, type: 'error' }));
+      .catch((error) => {
+        dispatchNotification({ text: error.message, type: 'error' });
+        setTimeout(() => Utils.logOut(firebaseRef));
+      });
     }
     //eslint-disable-next-line
   }, []);
@@ -65,7 +69,6 @@ const FormConfig = () => {
 
   const listDocuments = (folder, type) => {
     const files = folder.target.files;
-    console.log("🚀 ~ file: Form.js ~ line 68 ~ listDocuments ~ files", files)
     if (type === 'image') {
       if (files[0].size > 1000000) return dispatchNotification({ text: 'Imagen demaciado grande (maximo 1MB)', type: 'error' })
       setPlayerPhoto(files[0])

@@ -3,6 +3,7 @@ import { Navbar, Container, Button, NavDropdown, Nav } from 'react-bootstrap';
 import { firebaseRef } from '../../firebase/firebase';
 import DataApi from '../../api/UserApi';
 import NotificationContext from '../../context/notification-context';
+import Utils from '../../utils/utils';
 
 const Login = () => {
   const [userName, setUserName] = useState('');
@@ -57,13 +58,8 @@ const Login = () => {
 
   const signOut = () => {
     try {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userID');
-      localStorage.removeItem('mail');
       dispatchNotification({ text: `Hasta luego ${localStorage.getItem('userName')}` })
-      localStorage.removeItem('userName');
-      firebaseRef.auth().signOut();
-      window.location.href = '/';
+      Utils.logOut(firebaseRef);
     } catch (e) { // an error
     }
   };

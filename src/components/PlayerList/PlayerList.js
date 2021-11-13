@@ -3,6 +3,10 @@ import { Form, ListGroup } from 'react-bootstrap';
 import BackendApi from '../../api/backendApi';
 import NotificationContext from '../../context/notification-context';
 import ReportContext from '../../context/report-context';
+import { firebaseRef } from '../../firebase/firebase';
+
+import Utils from '../../utils/utils';
+
 import './PlayerList.css';
 
 const PlayerList = () => {
@@ -15,7 +19,10 @@ const PlayerList = () => {
     if (localStorage.getItem('mail')) {
       BackendApi.getPlayersInfo()
       .then((resp) => setPlayerList(resp.data))
-      .catch((error) => dispatchNotification({ text: error.message, type: 'error' }));
+      .catch((error) => {
+        dispatchNotification({ text: error.message, type: 'error' });
+        setTimeout(() => Utils.logOut(firebaseRef), 1000);
+      });
     }
     //eslint-disable-next-line
   }, []);
