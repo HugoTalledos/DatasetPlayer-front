@@ -48,7 +48,7 @@ const FormConfig = () => {
       .then((resp) => setPlayerList(resp.data))
       .catch((error) => {
         dispatchNotification({ text: error.message, type: 'error' });
-        setTimeout(() => Utils.logOut(firebaseRef));
+        setTimeout(() => Utils.logOut(firebaseRef), 1500);
       });
     }
     //eslint-disable-next-line
