@@ -1,6 +1,5 @@
 import axios from 'axios';
-// const apiURL = process.env.REACT_APP_BPSAUTH;
-const apiURL = 'http://localhost:5000/';
+const apiURL = process.env.REACT_APP_BACKEND;
 
 export const api = axios.create({
   baseURL: apiURL,
