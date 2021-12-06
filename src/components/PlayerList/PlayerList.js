@@ -33,17 +33,17 @@ const PlayerList = () => {
     <Form.Check inline label='Remate'
       onChange={(event) => setGestureType(event.target.id)}
       name='group1' type={'radio'}
-      id={'remate'}
+      id={'Remate'}
     />
     <Form.Check inline label='Saque con salto'
       onChange={(event) => setGestureType(event.target.id)}
       name='group1' type={'radio'}
-      id={'saque_con_salto'}
+      id={'Saque_con_salto'}
     />
     <Form.Check inline label='Saque sin salto'
       onChange={(event) => setGestureType(event.target.id)}
       name='group1' type={'radio'}
-      id={'saque_sin_salto'}
+      id={'Saque_sin_salto'}
     />
   </div>
   <h4> Jugadores</h4>
@@ -51,8 +51,8 @@ const PlayerList = () => {
     <ListGroup>
       {
         playerList && playerList.length > 0
-        && playerList.map((player) => 
-          (<ListGroup.Item key={`${player.documentNumber}`}
+        && playerList.map((player, idx) => 
+          (<ListGroup.Item key={`${idx}-${player.documentNumber}`}
                            style = {{ cursor: 'pointer' }}
                            disabled={!gestureType}
                            onClick={() => dispatchData({ player: player, gestureType})}>

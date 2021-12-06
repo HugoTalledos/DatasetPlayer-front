@@ -50,21 +50,25 @@ const PreviewList = () => {
     // console.log(player);
     const { documentNumber, listFiles, name, playerPhoto } = player;
     const listPromises = [];
-
-    const photFile = storage.child(`${documentNumber}/picture/${documentNumber}_${name}.png`);
-    const url = photFile.put(playerPhoto).then((snapshot) => {
-      return snapshot.ref.getDownloadURL();
-    });
-
+    let url = '';
+    const rootFiles = `${documentNumber}/data/${new Date().toISOString()}`
+    if (playerPhoto) {
+      const photFile = storage.child(`${documentNumber}/picture/${documentNumber}_${name}.png`);
+      url = photFile.put(playerPhoto).then((snapshot) => {
+        return snapshot.ref.getDownloadURL();
+      });
+    }
+    
     listFiles.forEach((file, idx) => {
-      const fileRef = storage.child(`${documentNumber}/data/${documentNumber}_${name}_${idx}.csv`);
+      const fileRef = storage.child(`${rootFiles}/${documentNumber}_${name}_${idx}.csv`);
       listPromises.push(fileRef.put(file))
     });
 
-    return Promise.all([listPromises])
-      .then(() => {
+    return Promise.all([listPromises, url])
+      .then((response) => {
+        console.log("🚀 ~ file: PreviewList.js ~ line 69 ~ .then ~ response", response)
         dispatchNotification({ text: `Archivos de ${player.name} subidos`, type: 'success' })
-        return url;
+        return { url: response[1], rootFiles };
       })
       .catch((err) =>dispatchNotification({ text: err.message, type: 'danger' }));
   };
@@ -94,10 +98,11 @@ const PreviewList = () => {
           })
         } else { 
           await uploadFiles(playerList[idx])
-          .then((resp) => {
-            BackendPlayer.addPlayer({ ...playerList[idx], photo: resp });
+          .then(({ url, rootFiles }) => {
+            console.log("🚀 ~ file: PreviewList.js ~ line 112 ~ .then ~ url", url)
+            BackendPlayer.addPlayer({ ...playerList[idx], photo: url, rootFiles });
 
-            BackendPlayer.startProcess(playerList[idx])
+            BackendPlayer.startProcess({ ...playerList[idx], rootFiles })
             .then((res) => {
               if (res.success) dispatchNotification({ text: res.data, type: 'success' });
               else dispatchNotification({ text: res.error, type: 'error' });

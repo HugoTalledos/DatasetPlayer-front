@@ -19,7 +19,7 @@
 }
 
 .main-container__report--imgs img {
-  width: 100%;
+  width: 90%;
 }
 
 .main-container__report--info {
@@ -29,7 +29,7 @@
 }
 
 #playerPicture {
-  width: 260px;
+  width: 200px;
 }
 
 .main-container__report--warning {

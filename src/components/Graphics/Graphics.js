@@ -1,6 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { ButtonGroup, Button, Col } from 'react-bootstrap';
-import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import ReportContext from '../../context/report-context';
 import { firebaseStorage } from '../../firebase/firebase';
@@ -10,6 +9,8 @@ import './Graphics.css'
 
 const Report = () => {
   const [listImg, setListImg] = useState([]);
+  const [listImgVl, setListImgVl] = useState([]);
+  const [listImgVa, setListImgVa] = useState([]);
   const [playerName, setPlayerName] = useState('');
   const [playerAge, setPlayerAge] = useState('');
   const [playerSex, setPlayerSex] = useState('');
@@ -21,20 +22,36 @@ const Report = () => {
   const storage = firebaseStorage.ref();
 
   const addImage = (newImage) => (setListImg((oldArray) => [...oldArray, newImage]));
+  const addImageVl = (newImage) => (setListImgVl((oldArray) => [...oldArray, newImage]));
+  const addImageVa = (newImage) => (setListImgVa((oldArray) => [...oldArray, newImage]));
 
   useEffect(() => {
-    console.log(data.player);
     if (data.player.documentNumber) {
       if(listImg.length > 0) setListImg([]);
       const {
         age, documentNumber, experience,
         playerName, sex, weight, picture,
       } = data.player;
-      const imagesListRef = storage.child(`${documentNumber}/images/NormalBand`);
-      imagesListRef.listAll().then(async (res) => {
+      const root = `${documentNumber}/images/${data.gestureType}/`
+      const imagesMARef = storage.child(`${root}Movimiento Angular`);
+      imagesMARef.listAll().then(async (res) => {
         for (let idx in res.items) {
           const url = await res.items[idx].getDownloadURL();
           addImage(url);
+        }
+      });
+      const imagesVLRef = storage.child(`${root}Velocidad Lineal`);
+      imagesVLRef.listAll().then(async (res) => {
+        for (let idx in res.items) {
+          const url = await res.items[idx].getDownloadURL();
+          addImageVl(url);
+        }
+      });
+      const imagesVARef = storage.child(`${root}Velocidad Angular`);
+      imagesVARef.listAll().then(async (res) => {
+        for (let idx in res.items) {
+          const url = await res.items[idx].getDownloadURL();
+          addImageVa(url);
         }
       });
       setPlayerName(playerName);
@@ -42,7 +59,7 @@ const Report = () => {
       setPlayerSex(sex);
       setPlayerWeight(weight);
       setPlayerExperience(experience);
-      setGestureType(data.gestureType);
+      setGestureType(data.gestureType.split('_').join(' '));
       setPlayerPhoto(picture);
     }
     //eslint-disable-next-line
@@ -50,9 +67,6 @@ const Report = () => {
 
   const saveAsPDF = () => {
     const input = document.getElementById('report');
-    // let imgWidth = canvas.imgWidth;
-    // let imgHeight = canvas.height * imgWidth / canvas.width;
-    // const imgData = canvas.toDataURL('img/png');
     const pdf = new jsPDF({
       orientation: 'p',
       unit: 'px',
@@ -62,7 +76,7 @@ const Report = () => {
       callback: () => {
         pdf.save("download.pdf");
       },
-      margin: [40, 30, 80, 30],
+      margin: [40, 30, 40, 30],
       autoPaging: 'text',
       width: 750,
       windowWidth: 1000,
@@ -73,7 +87,7 @@ const Report = () => {
     <div className={'flex-container'}>
       <ButtonGroup aria-label='Buttons group'>
         <Button variant='primary'>Descargar datos</Button>
-        <Button variant='primary' disable={listImg.length === 0}
+        <Button variant='primary'
                 onClick={() => saveAsPDF()}>Descargar reporte</Button>
       </ButtonGroup>
     </div>
@@ -97,10 +111,27 @@ const Report = () => {
             <img id={'playerPicture'} alt={'Jugador'} src={playerPhoto || userLogo}/>
           </div>
         </div>
+        <h3>{ gestureType }</h3>
+        <h3>Movimiento Angular </h3>
         <div className={'main-container__report--imgs'}>
           {
             listImg && listImg.length > 0
             && listImg.map((img, idx) => (<img id={idx} alt={'report'} src={img}/>))
+          }
+        </div>
+        <h3>Velocidad Lineal </h3>
+        <div className={'main-container__report--imgs'}>
+          {
+            listImgVl && listImgVl.length > 0
+            && listImgVl.map((img, idx) => (<img id={idx} alt={'report'} src={img}/>))
+          }
+        </div>
+        <div style={{ height: '200px'}}/>
+        <h3>Velocidad Angular </h3>
+        <div className={'main-container__report--imgs'}>
+          {
+            listImgVa && listImgVa.length > 0
+            && listImgVa.map((img, idx) => (<img id={idx} alt={'report'} src={img}/>))
           }
         </div>
       </div>)
